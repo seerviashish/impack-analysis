@@ -1,0 +1,18 @@
+{
+  "files.exclude": {
+    "**/*.js": { "when": "$(basename).ts" },
+    "**/*.js.map": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.tslint": true
+  },
+  "editor.formatOnSave": true,
+  "jest.debugCodeLens.showWhenTestStateIn": ["fail", "unknown", "pass", "skip"],
+  "jest.pathToJest": "CI=true && yarn test -- --coverage",
+  "jest.showCoverageOnLoad": true,
+  "eslint.format.enable": true,
+  "eslint.packageManager": "yarn",
+  "javascript.suggest.completeJSDocs": true,
+  "editor.snippetSuggestions": "top",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
