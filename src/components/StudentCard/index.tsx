@@ -17,10 +17,12 @@ import { Student, StudentState } from "../../pages/HomePage/slice";
 import { green, red } from "@material-ui/core/colors";
 
 type StudentCardProps = {
+  onlyView?: boolean;
   student: Student;
   onReject: (studentId: string) => void;
   onSelect: (studentId: string) => void;
   onRemove: (studentId: string) => void;
+  onClick: (studentId: string) => (e: any) => void;
 };
 
 const styles = (theme: Theme) =>
@@ -47,7 +49,9 @@ const StudentCard: React.FC<StudentCardProps & WithStyles<typeof styles>> = ({
   onReject,
   onSelect,
   onRemove,
+  onClick,
   student,
+  onlyView,
 }) => {
   const getLabel = () => {
     if (student.state === StudentState.SHORTLISTED) {
@@ -62,7 +66,11 @@ const StudentCard: React.FC<StudentCardProps & WithStyles<typeof styles>> = ({
   };
 
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card
+      className={classes.root}
+      variant="outlined"
+      onClick={onClick(student.id)}
+    >
       <CardHeader
         avatar={
           <Avatar
@@ -73,43 +81,49 @@ const StudentCard: React.FC<StudentCardProps & WithStyles<typeof styles>> = ({
           />
         }
         action={
-          <IconButton
-            aria-label="delete"
-            onClick={(e) => {
-              onRemove(student.id);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
+          !onlyView && (
+            <IconButton
+              aria-label="delete"
+              onClick={(e) => {
+                onRemove(student.id);
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          )
         }
         title={student.name}
         subheader={getLabel()}
       />
       <CardActions>
         {((student.state && student.state !== StudentState.SHORTLISTED) ||
-          !student.state) && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={(e) => {
-              onSelect(student.id);
-            }}
-          >
-            ShortList
-          </Button>
-        )}
+          !student.state) &&
+          !onlyView && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(student.id);
+              }}
+            >
+              ShortList
+            </Button>
+          )}
         {((student.state && student.state !== StudentState.REJECTED) ||
-          !student.state) && (
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={(e) => {
-              onReject(student.id);
-            }}
-          >
-            Reject
-          </Button>
-        )}
+          !student.state) &&
+          !onlyView && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onReject(student.id);
+              }}
+            >
+              Reject
+            </Button>
+          )}
       </CardActions>
     </Card>
   );

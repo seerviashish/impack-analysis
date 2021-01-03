@@ -12,10 +12,15 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+import BackIcon from "@material-ui/icons/ArrowBack";
 import React, { ChangeEvent } from "react";
 
 type MyAppBarProps = {
+  onlyView?: boolean;
+  back?: () => void;
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
+  toggleDrawer: (e: React.MouseEvent<HTMLElement>) => void;
+  drawerOpen: boolean;
 };
 
 const styles = (theme: Theme) =>
@@ -71,41 +76,66 @@ const styles = (theme: Theme) =>
         width: "40ch",
       },
     },
+    appbar: {
+      zIndex: theme.zIndex.drawer + 1,
+    },
   });
 
 const MyAppBar: React.FC<MyAppBarProps & WithStyles<typeof styles>> = ({
   classes,
   onSearch,
+  toggleDrawer,
+  onlyView,
+  back,
 }) => {
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar position="fixed" className={classes.appbar}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
+          {onlyView ? (
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="back button"
+              onClick={(e) => {
+                if (back) {
+                  back();
+                }
+              }}
+            >
+              <BackIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+              onClick={toggleDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography className={classes.title} variant="h6" noWrap>
             Impact-Analysis
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+          {!onlyView && (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+                onChange={onSearch}
+              />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-              onChange={onSearch}
-            />
-          </div>
+          )}
         </Toolbar>
       </AppBar>
     </div>

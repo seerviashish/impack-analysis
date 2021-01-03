@@ -10,15 +10,16 @@ import {
 import WaitingComponent from "./components/WaitingComponent";
 
 const HomePage = lazy(
-  () => import(/* webpackChunkName: 'SignInPage' */ "./pages/HomePage")
+  () => import(/* webpackChunkName: 'HomePage' */ "./pages/HomePage")
 );
 
 const RejectedPage = lazy(
-  () => import(/* webpackChunkName: 'SignInPage' */ "./pages/RejectedPage")
+  () => import(/* webpackChunkName: 'RejectedPage' */ "./pages/RejectedPage")
 );
 
 const ShortListedPage = lazy(
-  () => import(/* webpackChunkName: 'Messages' */ "./pages/ShortListedPage")
+  () =>
+    import(/* webpackChunkName: 'ShortListedPage' */ "./pages/ShortListedPage")
 );
 
 const StudentPage = lazy(
@@ -33,7 +34,6 @@ const App: React.FC = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path={ERROR} component={WaitingComponent(ErrorPage)} />
         <Route exact path={HOME} component={WaitingComponent(HomePage)} />
         <Route exact path={STUDENT} component={WaitingComponent(StudentPage)} />
         <Route
@@ -46,6 +46,7 @@ const App: React.FC = () => {
           path={SHORTLISTED}
           component={WaitingComponent(ShortListedPage)}
         />
+        <Route exact path={ERROR} component={WaitingComponent(ErrorPage)} />
       </Switch>
     </Router>
   );
